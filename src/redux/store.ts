@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { baseApi } from './api/baseApi';
+import authReducer from './features/authSlice';
 import todoReducer from './features/todoSlice';
 
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     todo: todoReducer,
+    auth: authReducer,
   },
   //   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>

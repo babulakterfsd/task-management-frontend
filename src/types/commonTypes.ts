@@ -14,3 +14,8 @@ export type TTodoInitialState = {
   filter: string;
   filteredTodos?: TTodo[];
 };
+
+export type TAuthInitialState = {
+  user: object | null;
+  token: string | null;
+};

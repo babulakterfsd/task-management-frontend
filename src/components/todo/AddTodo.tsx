@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useAddTodoInServerMutation } from '@/redux/api/baseApi';
+import { useAddTodoInServerMutation } from '@/redux/api/todoApi';
 import { generateRandomId } from '@/utils/generateRandomId';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useState } from 'react';

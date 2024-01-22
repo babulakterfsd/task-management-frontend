@@ -1,7 +1,7 @@
 import {
   useDeleteATodoFromServerMutation,
   useGetTodosFromServerQuery,
-} from '@/redux/api/baseApi';
+} from '@/redux/api/todoApi';
 import { useAppSelector } from '@/redux/hook';
 import { TTodo } from '@/types/commonTypes';
 import UpdateTodo from './UpdateTodo';
