@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useUpdateATodoInServerMutation } from '@/redux/api/api';
+import { useUpdateATodoInServerMutation } from '@/redux/api/baseApi';
 import { TTodo } from '@/types/commonTypes';
 import { useState } from 'react';
 

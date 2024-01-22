@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { baseApi } from './api/api';
+import { baseApi } from './api/baseApi';
 import todoReducer from './features/todoSlice';
 
 export const store = configureStore({

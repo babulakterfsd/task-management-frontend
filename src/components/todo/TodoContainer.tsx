@@ -1,4 +1,4 @@
-import { useGetTodosFromServerQuery } from '@/redux/api/api';
+import { useGetTodosFromServerQuery } from '@/redux/api/baseApi';
 import AddTodo from './AddTodo';
 import FilterTodosDropdown from './FilterTodosDropdown';
 import NoTodo from './NoTodo';
