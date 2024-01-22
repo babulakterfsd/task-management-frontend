@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://todo-app-server-bay.vercel.app',
+    baseUrl: 'http://localhost:5000/api/',
   }),
   tagTypes: ['Todo'],
   endpoints: (builder) => ({
@@ -18,6 +18,8 @@ export const baseApi = createApi({
     }),
     addTodoInServer: builder.mutation({
       query: (todo) => {
+        console.log(todo);
+
         return {
           url: '/todos',
           method: 'POST',

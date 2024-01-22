@@ -1,7 +1,15 @@
-import MainLayout from './layouts/MainLayout';
+import { Provider } from 'react-redux';
+import { RouterProvider } from 'react-router-dom';
+import { store } from './redux/store';
+import router from './routes/All.routes';
+import './styles/index.css';
 
 function App() {
-  return <MainLayout />;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 }
 
 export default App;

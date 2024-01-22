@@ -1,18 +1,18 @@
-### React Quick Starter by Babul Akter
+### Task Management App
 
-## technology used
+#### technology used
 
 - React
-- tanstack Router
-- tailwind css
-- redux (redux-toolkit)
-- eslint
+- React Router
+- Tailwind css
+- Redux (redux-toolkit)
+- Typescript
 
-## Features
+#### Features
 
 - Routing setup
 - Redux setup
 - tailwind css setup
 - eslint setup
 
-##### server link : https://reacttodo-server-babulakterfsd.vercel.app
+##### Live Link : https://task-management-of-babul.netlify.app
