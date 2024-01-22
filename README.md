@@ -15,4 +15,4 @@
 - tailwind css setup
 - eslint setup
 
-##### Live Link : https://task-management-of-babul.netlify.app
+##### Live Link : https://task-management-of-babul.vercel.app
