@@ -19,7 +19,7 @@ const Login = () => {
   };
 
   return (
-    <div className="border border-slate-100 pt-4 px-6 pb-12 md:w-2/6 mx-auto">
+    <div className="border border-slate-100 pt-4 px-6 pb-12 md:w-4/6 mx-auto">
       <h3 className="text-xl text-center font-semibold capitalize">
         Please login to continue !
       </h3>
