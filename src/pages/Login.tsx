@@ -14,17 +14,18 @@ const Login = () => {
     if (!loginData?.email || !loginData?.password) {
       alert('Please fill all the fields');
     } else {
-      const response = await login(loginData);
+      const response = await login(loginData).unwrap();
 
-      const userFromDB = response?.data?.data?.user;
-      const accessToken = response?.data?.data?.token;
-      const errorMessage = response?.error?.data?.message;
+      console.log(response);
 
-      if (errorMessage) {
-        alert(errorMessage);
-      } else if (userFromDB && accessToken) {
+      const userFromDB = response?.data?.user;
+      const accessToken = response?.data?.token;
+
+      if (userFromDB && accessToken) {
         alert('Login Successful');
         dispatch(setUserInLocalState({ user: userFromDB, token: accessToken }));
+      } else {
+        alert('Login Failed');
       }
     }
   };
