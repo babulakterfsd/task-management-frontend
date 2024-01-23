@@ -16,8 +16,6 @@ const Login = () => {
     } else {
       const response = await login(loginData).unwrap();
 
-      console.log(response);
-
       const userFromDB = response?.data?.user;
       const accessToken = response?.data?.token;
 
