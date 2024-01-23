@@ -1,8 +1,20 @@
+import { setUserInLocalState } from '@/redux/features/authSlice';
+import { useAppDispatch } from '@/redux/hook';
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleLogout = () => {
+    toast.success('Logout Successful', {
+      position: 'top-right',
+    });
+    dispatch(setUserInLocalState({ user: null, token: null }));
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -85,12 +97,13 @@ const DashboardLayout = () => {
                 </Link>
               </li>
               <li>
-                <span
+                <Link
+                  to="/login"
                   className="cursor-pointer ms-5"
-                  onClick={() => alert('Logged Out!')}
+                  onClick={handleLogout}
                 >
                   Logout
-                </span>
+                </Link>
               </li>
             </div>
           </ul>

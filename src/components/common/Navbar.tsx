@@ -1,11 +1,27 @@
+import {
+  setUserInLocalState,
+  useCurrentToken,
+} from '@/redux/features/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const token = useAppSelector(useCurrentToken);
+  const dispatch = useAppDispatch();
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(setUserInLocalState({ user: null, token: null }));
+    setMenuOpen(!isMenuOpen);
+    toast.success('Logout Successful', {
+      position: 'top-right',
+    });
   };
 
   return (
@@ -76,13 +92,23 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="">
-                <Link
-                  to="/login"
-                  className="mt-8 md:mt-0 md:ml-24 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out"
-                  onClick={toggleMenu}
-                >
-                  Log In
-                </Link>
+                {token ? (
+                  <Link
+                    to="/login"
+                    className="mt-8 md:mt-0 md:ml-24 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out"
+                    onClick={handleLogout}
+                  >
+                    LogOut
+                  </Link>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="mt-8 md:mt-0 md:ml-24 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out"
+                    onClick={toggleMenu}
+                  >
+                    Log In
+                  </Link>
+                )}
               </li>
             </ul>
           </div>

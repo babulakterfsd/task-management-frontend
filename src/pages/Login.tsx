@@ -2,13 +2,15 @@ import { useLoginMutation } from '@/redux/api/authApi';
 import { setUserInLocalState } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 import { FieldValues, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (loginData: FieldValues) => {
     if (!loginData?.email || !loginData?.password) {
@@ -20,10 +22,16 @@ const Login = () => {
       const accessToken = response?.data?.token;
 
       if (userFromDB && accessToken) {
-        alert('Login Successful');
+        toast.success('Login Successful', {
+          position: 'top-right',
+          icon: '👏',
+        });
         dispatch(setUserInLocalState({ user: userFromDB, token: accessToken }));
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1000);
       } else {
-        alert('Login Failed');
+        toast.error('Login Failed');
       }
     }
   };
