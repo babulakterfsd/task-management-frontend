@@ -19,3 +19,10 @@ export type TAuthInitialState = {
   user: object | null;
   token: string | null;
 };
+
+export type TCurrentUser = {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+};

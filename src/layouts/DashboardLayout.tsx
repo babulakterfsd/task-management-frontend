@@ -1,5 +1,9 @@
-import { setUserInLocalState } from '@/redux/features/authSlice';
-import { useAppDispatch } from '@/redux/hook';
+import {
+  setUserInLocalState,
+  useCurrentUser,
+} from '@/redux/features/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { TCurrentUser } from '@/types/commonTypes';
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -7,6 +11,8 @@ import { toast } from 'sonner';
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const userInfo = useAppSelector(useCurrentUser);
+  const { username, role } = userInfo as TCurrentUser;
 
   const handleLogout = () => {
     toast.success('Logout Successful', {
@@ -64,6 +70,7 @@ const DashboardLayout = () => {
             </button>
           </div>
           <ul className="font-medium">
+            <li className="border-b-2 border-slate-100 mb-4 lg:hidden">{`Welcome, ${username}(${role})`}</li>
             <li>
               <Link
                 to="/dashboard"
@@ -114,7 +121,9 @@ const DashboardLayout = () => {
         {/* dashboard content */}
         <div className="py-10 hidden lg:flex justify-end items-center bg-[#f9fafb]">
           <button>
-            <span className="text-black mr-24">Welcome, Guest !</span>
+            <span className="text-black mr-24">
+              Welcome, {`${username}(${role})`}
+            </span>
           </button>
         </div>
         <Outlet />
