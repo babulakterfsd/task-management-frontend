@@ -1,14 +1,31 @@
+import { useLoginMutation } from '@/redux/api/authApi';
+import { setUserInLocalState } from '@/redux/features/authSlice';
+import { useAppDispatch } from '@/redux/hook';
 import { FieldValues, useForm } from 'react-hook-form';
+
 import { Link } from 'react-router-dom';
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
+  const [login] = useLoginMutation();
+  const dispatch = useAppDispatch();
 
-  const handleLogin = (loginData: FieldValues) => {
+  const handleLogin = async (loginData: FieldValues) => {
     if (!loginData?.email || !loginData?.password) {
       alert('Please fill all the fields');
     } else {
-      console.log(loginData);
+      const response = await login(loginData);
+
+      const userFromDB = response?.data?.data?.user;
+      const accessToken = response?.data?.data?.token;
+      const errorMessage = response?.error?.data?.message;
+
+      if (errorMessage) {
+        alert(errorMessage);
+      } else if (userFromDB && accessToken) {
+        alert('Login Successful');
+        dispatch(setUserInLocalState({ user: userFromDB, token: accessToken }));
+      }
     }
   };
 
