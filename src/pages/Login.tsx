@@ -29,7 +29,7 @@ const Login = () => {
         dispatch(setUserInLocalState({ user: userFromDB, token: accessToken }));
         setTimeout(() => {
           navigate('/dashboard');
-        }, 1000);
+        }, 500);
       } else {
         toast.error('Login Failed');
       }
