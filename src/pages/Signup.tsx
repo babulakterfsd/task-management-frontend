@@ -1,8 +1,19 @@
+import { useCurrentToken } from '@/redux/features/authSlice';
+import { useAppSelector } from '@/redux/hook';
+import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+  const token = useAppSelector(useCurrentToken);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, [token, navigate]);
 
   const handleSignup = (signupData: FieldValues) => {
     const { userName, email, password } = signupData;

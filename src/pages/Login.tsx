@@ -1,9 +1,13 @@
 import { useLoginMutation } from '@/redux/api/authApi';
-import { setUserInLocalState } from '@/redux/features/authSlice';
-import { useAppDispatch } from '@/redux/hook';
+import {
+  setUserInLocalState,
+  useCurrentToken,
+} from '@/redux/features/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { FieldValues, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -11,6 +15,13 @@ const Login = () => {
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const token = useAppSelector(useCurrentToken);
+
+  useEffect(() => {
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, [token, navigate]);
 
   const handleLogin = async (loginData: FieldValues) => {
     if (!loginData?.email || !loginData?.password) {
