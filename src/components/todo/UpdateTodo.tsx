@@ -8,8 +8,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useUpdateATodoInServerMutation } from '@/redux/api/todoApi';
-import { TTodo } from '@/types/commonTypes';
+import { useCurrentUser } from '@/redux/features/authSlice';
+import { useAppSelector } from '@/redux/hook';
+import { TCurrentUser, TTodo } from '@/types/commonTypes';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const UpdateTodo = (todo: { todo: TTodo }) => {
   const [title, setTitle] = useState<string>(todo.todo.title);
@@ -17,6 +20,9 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
   const [isCompleted, setIsCompleted] = useState<boolean>(
     todo.todo.isCompleted
   );
+
+  const userInfo = useAppSelector(useCurrentUser);
+  const { role } = userInfo as TCurrentUser;
 
   const [updateTodoInServer] = useUpdateATodoInServerMutation();
 
@@ -27,20 +33,38 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const options = {
-      id: todo.todo.id,
-      title,
-      description,
-      isCompleted,
-    };
+    if (role === 'user') {
+      const options = {
+        id: todo.todo.id,
+        title,
+        description,
+        isCompleted,
+      };
 
-    updateTodoInServer(options);
+      updateTodoInServer(options);
+    }
+  };
+
+  const adminsUpdateTodoHandler = () => {
+    if (role === 'admin') {
+      toast.error('Admins cannot update todo.', {
+        position: 'top-right',
+        icon: '⚠️',
+      });
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="text-green-400 font-semibold">update</button>
+        <button
+          className={`text-green-400 font-semibold ${
+            role === 'admin' ? 'hidden' : ''
+          }`}
+          onClick={adminsUpdateTodoHandler}
+        >
+          update
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -69,6 +93,7 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
                 maxLength={8}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                disabled={role === 'admin'}
               />
             </div>
 
@@ -88,6 +113,7 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
                 maxLength={20}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                disabled={role === 'admin'}
               ></textarea>
             </div>
           </div>
@@ -101,6 +127,7 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
                 className="peer h-4 w-4 border-gray-300 rounded-md text-dashboard-main focus:ring-indigo-500"
                 checked={isCompleted}
                 onChange={handleIsCompletedChange}
+                disabled={role === 'admin'}
               />
               <label
                 htmlFor="terms"
@@ -116,7 +143,10 @@ const UpdateTodo = (todo: { todo: TTodo }) => {
             <DialogClose asChild>
               <button
                 type="submit"
-                className="mt-4 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out"
+                className={` mt-4 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out ${
+                  role === 'admin' ? 'cursor-not-allowed' : 'cursor-pointer'
+                } `}
+                disabled={role === 'admin'}
               >
                 Save
               </button>

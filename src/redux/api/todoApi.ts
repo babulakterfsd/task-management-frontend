@@ -11,6 +11,15 @@ const todoApi = baseApi.injectEndpoints({
       },
       providesTags: ['Todo'],
     }),
+    getTodosForASpecificUserFromServer: builder.query({
+      query: (email) => {
+        return {
+          url: `/todos/${email}`,
+          method: 'GET',
+        };
+      },
+      providesTags: ['Todo'],
+    }),
     addTodoInServer: builder.mutation({
       query: (todo) => {
         console.log(todo);
@@ -48,6 +57,7 @@ const todoApi = baseApi.injectEndpoints({
 
 export const {
   useGetTodosFromServerQuery,
+  useGetTodosForASpecificUserFromServerQuery,
   useAddTodoInServerMutation,
   useUpdateATodoInServerMutation,
   useDeleteATodoFromServerMutation,

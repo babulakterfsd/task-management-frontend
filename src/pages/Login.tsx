@@ -48,10 +48,36 @@ const Login = () => {
   };
 
   return (
-    <div className="border border-slate-100 pt-4 px-6 pb-12 md:w-4/6 mx-auto">
+    <div className="border border-slate-100 pt-4 px-6 pb-12 md:w-3/6 mx-auto">
       <h3 className="text-xl text-center font-semibold capitalize">
         Please login to continue !
       </h3>
+      <div className="border border-slate-100 p-2 flex justify-between items-center space-x-4 my-5">
+        <div>
+          <h5 className="underline">Demo User </h5>
+          <ul>
+            <li>
+              <span className="font-medium">Email :</span> xpawal@gmail.com{' '}
+            </li>
+            <li>
+              <span className="font-medium">Password :</span> : awal123{' '}
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h5 className="underline">Demo Admin </h5>
+          <ul>
+            <li>
+              <span className="font-medium">Email :</span>{' '}
+              babulakterfsd@gmail.com{' '}
+            </li>
+            <li>
+              <span className="font-medium">Password :</span> : babul123{' '}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <hr className="my-4" />
       <form
         className="space-y-4 md:space-y-6"
         onSubmit={handleSubmit(handleLogin)}

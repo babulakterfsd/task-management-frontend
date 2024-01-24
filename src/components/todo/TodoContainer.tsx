@@ -1,15 +1,32 @@
-import { useGetTodosFromServerQuery } from '@/redux/api/todoApi';
+import {
+  useGetTodosForASpecificUserFromServerQuery,
+  useGetTodosFromServerQuery,
+} from '@/redux/api/todoApi';
+import { useCurrentUser } from '@/redux/features/authSlice';
+import { useAppSelector } from '@/redux/hook';
+import { TCurrentUser } from '@/types/commonTypes';
 import AddTodo from './AddTodo';
 import FilterTodosDropdown from './FilterTodosDropdown';
 import NoTodo from './NoTodo';
 import TodoList from './TodoList';
 
 const TodoContainer = () => {
+  const userInfo = useAppSelector(useCurrentUser);
+  const { role, email } = userInfo as TCurrentUser;
+
   // load todos from local state
   // const { todos } = useAppSelector((state) => state.todo);
 
   //load todos from server
-  const { data: todos } = useGetTodosFromServerQuery(undefined);
+  let todos = [];
+
+  if (role === 'admin') {
+    const { data } = useGetTodosFromServerQuery(undefined);
+    todos = data;
+  } else if (role === 'user') {
+    const { data } = useGetTodosForASpecificUserFromServerQuery(email);
+    todos = data;
+  }
 
   return (
     <div className="md:w-4/6 md:mx-auto mt-10">

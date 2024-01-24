@@ -9,13 +9,20 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useAddTodoInServerMutation } from '@/redux/api/todoApi';
+import { useCurrentUser } from '@/redux/features/authSlice';
+import { useAppSelector } from '@/redux/hook';
+import { TCurrentUser } from '@/types/commonTypes';
 import { generateRandomId } from '@/utils/generateRandomId';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 const AddTodo = () => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+
+  const userInfo = useAppSelector(useCurrentUser);
+  const { role } = userInfo as TCurrentUser;
 
   //for local state update
   // const dispatch = useAppDispatch(); // remember, when using local state, we use this dispatch and useAppSelector. when using server state, we use useGetTodosQuery and useGetTodoQuery and so on...
@@ -37,21 +44,34 @@ const AddTodo = () => {
     // ); local state e jokhon update korchilam, tokhn evabe dispatch e todoSlice er addTodo function call kore kaj korechilam.
 
     //to update server state
-    addTodo({
-      id: generateRandomId(),
-      title,
-      description,
-      isCompleted: false,
-    });
+    if (role === 'user') {
+      addTodo({
+        id: generateRandomId(),
+        title,
+        description,
+        isCompleted: false,
+      });
 
-    setTitle('');
-    setDescription('');
+      setTitle('');
+      setDescription('');
+    }
+  };
+
+  const adminsAddTodoHandler = () => {
+    if (role === 'admin') {
+      toast.error('Admins cannot add todo.', {
+        position: 'top-right',
+        icon: '⚠️',
+      });
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Todo</Button>
+        <Button variant="outline" onClick={adminsAddTodoHandler}>
+          Add Todo
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -80,6 +100,7 @@ const AddTodo = () => {
                 maxLength={8}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                disabled={role === 'admin'}
               />
             </div>
 
@@ -99,6 +120,7 @@ const AddTodo = () => {
                 maxLength={20}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                disabled={role === 'admin'}
               ></textarea>
             </div>
           </div>
@@ -106,7 +128,10 @@ const AddTodo = () => {
           <DialogClose asChild>
             <button
               type="submit"
-              className="mt-4 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out"
+              className={` mt-4 bg-red-300 rounded-md px-8 py-2 text-white hover:bg-red-400 transition-colors duration-300 ease-in-out ${
+                role === 'admin' ? 'cursor-not-allowed' : 'cursor-pointer'
+              } `}
+              disabled={role === 'admin'}
             >
               Save
             </button>

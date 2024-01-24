@@ -7,6 +7,7 @@ export type TTodo = {
   title: string;
   description: string;
   isCompleted: boolean;
+  createdBy: string;
 };
 
 export type TTodoInitialState = {

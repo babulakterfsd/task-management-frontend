@@ -1,26 +1,43 @@
 import {
   useDeleteATodoFromServerMutation,
+  useGetTodosForASpecificUserFromServerQuery,
   useGetTodosFromServerQuery,
 } from '@/redux/api/todoApi';
+import { useCurrentUser } from '@/redux/features/authSlice';
 import { useAppSelector } from '@/redux/hook';
-import { TTodo } from '@/types/commonTypes';
+import { TCurrentUser, TTodo } from '@/types/commonTypes';
 import UpdateTodo from './UpdateTodo';
 
 const TodoList = () => {
+  const userInfo = useAppSelector(useCurrentUser);
+  const { role, email } = userInfo as TCurrentUser;
+
   // // load states from local
   const { filter } = useAppSelector((state) => state.todo);
 
   //load state from server
-  const {
-    data: todos,
-    isLoading,
-    isError,
-  } = useGetTodosFromServerQuery(undefined);
+  let todos = [];
+  let isItLoading = false;
+  let isAnyError = false;
+
+  if (role === 'admin') {
+    const { data, isLoading, isError } = useGetTodosFromServerQuery(undefined);
+    todos = data;
+    isItLoading = isLoading;
+    isAnyError = isError;
+  } else if (role === 'user') {
+    const { data, isLoading, isError } =
+      useGetTodosForASpecificUserFromServerQuery(email);
+    todos = data;
+    isItLoading = isLoading;
+    isAnyError = isError;
+  }
+
   const [deleteATodoFromServer] = useDeleteATodoFromServerMutation();
 
   let allTodos: TTodo[] = [];
 
-  if (isLoading === false && isError === false) {
+  if (isItLoading === false && isAnyError === false) {
     const completedTodos = todos.data.filter((todo: TTodo) => todo.isCompleted);
     const incompleteTodos = todos.data.filter(
       (todo: TTodo) => !todo.isCompleted
@@ -32,8 +49,8 @@ const TodoList = () => {
     deleteATodoFromServer(todo);
   };
 
-  if (isLoading) return <h1>Loading...</h1>;
-  if (isError) return <h1>Error...</h1>;
+  if (isItLoading) return <h1>Loading...</h1>;
+  if (isAnyError) return <h1>Error...</h1>;
 
   return (
     <div className="overflow-x-auto">
@@ -46,8 +63,14 @@ const TodoList = () => {
             <th scope="col" className="px-4 py-3">
               Description
             </th>
-            <th scope="col" className="px-4 py-3">
+            <th
+              scope="col"
+              className={`px-4 py-3 ${role === 'admin' ? '' : 'hidden'}`}
+            >
               Iscompleted
+            </th>
+            <th scope="col" className="px-4 py-3">
+              Created By
             </th>
             <th scope="col" className="px-4 py-3">
               Actions
@@ -57,7 +80,7 @@ const TodoList = () => {
         <tbody>
           {filter === 'all' &&
             allTodos?.map((todo: TTodo) => {
-              const { id, title, description, isCompleted } = todo;
+              const { id, title, description, isCompleted, createdBy } = todo;
 
               return (
                 <tr className="border-b border-gray-700" key={id}>
@@ -77,6 +100,13 @@ const TodoList = () => {
                       </span>
                     )}
                   </td>
+                  <td
+                    className={`px-2 lg:px-4 py-1 lg:py-1.5 ${
+                      role === 'admin' ? '' : 'hidden'
+                    }`}
+                  >
+                    {createdBy}
+                  </td>
                   <td className="flex justify-center space-x-3 items-center">
                     <UpdateTodo todo={todo} />
                     <button
@@ -93,7 +123,7 @@ const TodoList = () => {
             todos.data
               ?.filter((todo: TTodo) => todo.isCompleted)
               .map((todo: TTodo) => {
-                const { id, title, description, isCompleted } = todo;
+                const { id, title, description, isCompleted, createdBy } = todo;
 
                 return (
                   <tr className="border-b border-gray-700" key={id}>
@@ -114,6 +144,13 @@ const TodoList = () => {
                           Not Completed
                         </span>
                       )}
+                    </td>
+                    <td
+                      className={`px-2 lg:px-4 py-1 lg:py-1.5 ${
+                        role === 'admin' ? '' : 'hidden'
+                      }`}
+                    >
+                      {createdBy}
                     </td>
                     <td className="flex justify-center space-x-3 items-center">
                       <UpdateTodo todo={todo} />
@@ -131,7 +168,7 @@ const TodoList = () => {
             todos?.data
               ?.filter((todo: TTodo) => !todo.isCompleted)
               .map((todo: TTodo) => {
-                const { id, title, description, isCompleted } = todo;
+                const { id, title, description, isCompleted, createdBy } = todo;
 
                 return (
                   <tr className="border-b border-gray-700" key={id}>
@@ -152,6 +189,13 @@ const TodoList = () => {
                           Not Completed
                         </span>
                       )}
+                    </td>
+                    <td
+                      className={`px-2 lg:px-4 py-1 lg:py-1.5 ${
+                        role === 'admin' ? '' : 'hidden'
+                      }`}
+                    >
+                      {createdBy}
                     </td>
                     <td className="flex justify-center space-x-3 items-center">
                       <UpdateTodo todo={todo} />
