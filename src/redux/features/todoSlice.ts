@@ -15,6 +15,7 @@ const todoSlice = createSlice({
         title: action.payload.title,
         description: action.payload.description,
         isCompleted: false,
+        createdBy: action.payload.createdBy,
       });
     },
     updateTodo: (state, action: PayloadAction<TTodo>) => {
