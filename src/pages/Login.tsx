@@ -60,7 +60,7 @@ const Login = () => {
               <span className="font-medium">Email :</span> xpawal@gmail.com{' '}
             </li>
             <li>
-              <span className="font-medium">Password :</span> : awal123{' '}
+              <span className="font-medium">Password :</span> awal123{' '}
             </li>
           </ul>
         </div>
@@ -72,7 +72,7 @@ const Login = () => {
               babulakterfsd@gmail.com{' '}
             </li>
             <li>
-              <span className="font-medium">Password :</span> : babul123{' '}
+              <span className="font-medium">Password :</span> babul123{' '}
             </li>
           </ul>
         </div>
